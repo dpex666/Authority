@@ -25,7 +25,7 @@ export default function ExamplePage() {
           <Button size="sm" variant="ghost" onClick={() => router.push("/")}>
             Back home
           </Button>
-          <Button size="sm" onClick={() => router.push("/quiz")}>
+          <Button size="sm" onClick={() => router.push("/check/start")}>
             Start your report
           </Button>
         </>
@@ -42,7 +42,7 @@ export default function ExamplePage() {
           />
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button size="lg" className="w-full sm:w-auto" onClick={() => router.push("/quiz")}>
+            <Button size="lg" className="w-full sm:w-auto" onClick={() => router.push("/check/start")}>
               Start your report
             </Button>
             <Button
