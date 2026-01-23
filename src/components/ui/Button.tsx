@@ -16,16 +16,16 @@ export function Button({
   type?: "button" | "submit";
 }) {
   const base =
-    "inline-flex items-center justify-center rounded-2xl px-6 py-3 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-black/20";
+    "inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-[color:var(--primary)]/20";
 
   const primary =
-    "bg-[#141414] text-white shadow-sm hover:bg-[#000000] active:scale-[0.98]";
+    "bg-[color:var(--primary)] text-white shadow-sm shadow-[color:var(--primary)]/10 hover:bg-[#163a35] active:scale-[0.98]";
 
   const secondary =
-    "bg-white text-[#141414] border border-black/15 hover:bg-black/5";
+    "bg-[color:var(--secondary)] text-[color:var(--primary)] border border-[color:var(--primary)]/20 hover:bg-[#c3dec0]";
 
   const ghost =
-    "bg-transparent text-[#141414] hover:bg-black/5";
+    "bg-transparent text-[color:var(--primary)] hover:bg-[color:var(--bg-1)]";
 
   const disabledStyle =
     "opacity-40 cursor-not-allowed hover:bg-inherit active:scale-100";

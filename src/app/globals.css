@@ -3,21 +3,23 @@
 @tailwind utilities;
 
 :root {
-  /* Gaia-ish warm neutrals */
-  --bg-0: #f7f3ee;
-  --bg-1: #efe9e1;
-  --card: rgba(255, 255, 255, 0.78);
-  --card-strong: rgba(255, 255, 255, 0.92);
-  --border: rgba(20, 20, 20, 0.10);
-  --text: #141414;
-  --muted: rgba(20, 20, 20, 0.60);
-
-  --ink: #141414;
-  --ink-soft: rgba(20, 20, 20, 0.75);
-
-  /* Accent (not harsh black) */
-  --accent: #2b2b2b;
-  --accent-soft: rgba(43, 43, 43, 0.12);
+  --primary: #1d4641;
+  --secondary: #d4e9ca;
+  --tertiary: #48705b;
+  --accent: #85f199;
+  --bg-0: #ffffff;
+  --bg-1: #f3f7fa;
+  --card: #ffffff;
+  --card-strong: #ffffff;
+  --border: #e0e0e0;
+  --text: #180026;
+  --muted: #807388;
+  --ink: #180026;
+  --ink-soft: #2a1537;
+  --success: #00c48c;
+  --warning: #ffc466;
+  --error: #ff4e68;
+  --info: #98dbff;
 }
 
 html,
@@ -27,14 +29,15 @@ body {
 
 body {
   color: var(--text);
+  font-family: var(--font-sans), "Montserrat", system-ui, sans-serif;
   background:
-    radial-gradient(1200px 800px at 20% 10%, rgba(255, 255, 255, 0.65), transparent 50%),
-    radial-gradient(1200px 800px at 80% 30%, rgba(255, 255, 255, 0.45), transparent 55%),
+    radial-gradient(900px 500px at 10% 0%, rgba(133, 241, 153, 0.12), transparent 55%),
+    radial-gradient(900px 500px at 90% 10%, rgba(29, 70, 65, 0.08), transparent 60%),
     linear-gradient(180deg, var(--bg-0), var(--bg-1));
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: rgba(20, 20, 20, 0.12);
+  background: rgba(133, 241, 153, 0.35);
 }

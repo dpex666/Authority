@@ -13,24 +13,26 @@ export default function ExamplePage() {
 
   return (
     <div className="min-h-screen">
-      <div className="mx-auto max-w-3xl px-4 py-12">
+      <div className="mx-auto max-w-4xl px-4 py-12">
         <div className="mb-8">
-          <div className="text-xs tracking-widest text-black/50">AUTHORITY</div>
-          <h1 className="mt-2 text-4xl font-semibold text-black">Authority Report</h1>
-          <p className="mt-3 text-base text-black/60">
+          <div className="text-xs tracking-[0.3em] text-[color:var(--muted)]">AUTHORITY</div>
+          <h1 className="mt-2 text-[44px] font-bold leading-[1.05] text-[color:var(--ink)] sm:text-[55px] lg:text-[80px]">
+            Authority Report
+          </h1>
+          <p className="mt-3 text-base text-[color:var(--muted)]">
             Example report layout and structure.
           </p>
 
           <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href="/quiz"
-              className="inline-flex items-center justify-center rounded-2xl px-6 py-3 text-sm font-medium bg-[#141414] text-white hover:bg-black transition"
+              className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium bg-[color:var(--primary)] text-white shadow-sm shadow-[color:var(--primary)]/10 hover:bg-[#163a35] transition"
             >
               Start your report
             </Link>
             <Link
               href="/"
-              className="inline-flex items-center justify-center rounded-2xl px-6 py-3 text-sm font-medium bg-white text-[#141414] border border-black/15 hover:bg-black/5 transition"
+              className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium bg-[color:var(--secondary)] text-[color:var(--primary)] border border-[color:var(--primary)]/20 hover:bg-[#c3dec0] transition"
             >
               Back
             </Link>
