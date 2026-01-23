@@ -8,7 +8,7 @@ export function Card({
   return (
     <div
       className={[
-        "rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--card)] shadow-[var(--shadow-subtle)]",
+        "rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--surface)] shadow-[var(--shadow-subtle)]",
         className,
       ].join(" ")}
       {...props}
@@ -28,7 +28,31 @@ export function CardHeader({
   return <div className={["px-6 pt-6", className].join(" ")}>{children}</div>;
 }
 
-export function CardBody({
+export function CardTitle({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={["text-lg font-semibold text-[color:var(--text)]", className].join(" ")}>
+      {children}
+    </div>
+  );
+}
+
+export function CardDescription({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return <div className={["text-sm text-[color:var(--muted)]", className].join(" ")}>{children}</div>;
+}
+
+export function CardContent({
   children,
   className = "",
 }: {
@@ -47,3 +71,5 @@ export function CardFooter({
 }) {
   return <div className={["px-6 pb-6", className].join(" ")}>{children}</div>;
 }
+
+export const CardBody = CardContent;

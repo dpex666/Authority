@@ -9,7 +9,7 @@ import { isUnlocked, setUnlocked as setUnlockedLS, clearUnlocked } from "@/lib/a
 import { exportReportPdf } from "@/lib/authority/exportPdf";
 import { generateReport } from "@/lib/authority/report";
 
-import { Card, CardBody, CardFooter, CardHeader } from "./ui/Card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/Card";
 import { Progress } from "./ui/Progress";
 import { Button } from "./ui/Button";
 import { ChoiceRow, ScaleRow } from "./ui/Field";
@@ -17,6 +17,7 @@ import { Container } from "./ui/Container";
 import { Input } from "./ui/Input";
 import { Badge } from "./ui/Badge";
 import { Divider } from "./ui/Divider";
+import { PageShell } from "./ui/PageShell";
 
 import AuthorityMap from "./AuthorityMap";
 import ReportView from "@/components/ReportView";
@@ -113,36 +114,40 @@ export default function AuthorityApp() {
   const topTeaser = result.topFlags?.[0];
 
   return (
-    <div className="min-h-screen">
+    <PageShell
+      actions={
+        <Button variant="ghost" size="sm" onClick={reset}>
+          Reset
+        </Button>
+      }
+    >
       <Container className="py-10 sm:py-12">
         {/* Top bar */}
         <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="text-sm font-medium text-[color:var(--muted)]">Authority check</div>
-            <div className="mt-2 text-3xl font-semibold leading-tight text-[color:var(--ink)] sm:text-4xl">
+            <div className="mt-2 text-3xl font-semibold leading-tight text-[color:var(--text)] sm:text-4xl">
               Your current authority readiness
             </div>
             <div className="mt-2 max-w-xl text-sm text-[color:var(--muted)] sm:text-base">
               One question at a time. Calm, structured, and designed for clear next steps.
             </div>
           </div>
-          <Button variant="ghost" onClick={reset}>
-            Reset
-          </Button>
         </div>
 
         {/* INTRO */}
         {screen === "intro" && (
-          <Card className="bg-white/90">
+          <Card className="bg-white/95 shadow-[var(--shadow-soft)]">
             <CardHeader>
-              <div className="text-sm text-[color:var(--muted)]">Your current</div>
-              <div className="mt-2 flex flex-wrap items-center gap-2">
+              <CardTitle>Your starting point</CardTitle>
+              <CardDescription>Personalise the report and begin the guided check.</CardDescription>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
                 <Badge tone="primary">Index: {result.overall}/100</Badge>
                 <Badge>Status: {overallLabel(result.overall)}</Badge>
                 <Badge>Report: {unlocked ? "Unlocked" : "Locked"}</Badge>
               </div>
             </CardHeader>
-            <CardBody className="space-y-5">
+            <CardContent className="space-y-5">
               <div className="space-y-2 text-sm text-[color:var(--ink-soft)] sm:text-base">
                 <div>
                   Authority maps where decisions, access, and digital control actually sit — and
@@ -170,14 +175,22 @@ export default function AuthorityApp() {
               <div className="text-xs text-[color:var(--muted)]">
                 Used only to personalise your report. Stored locally.
               </div>
-            </CardBody>
+            </CardContent>
             <Divider />
             <CardFooter>
-              <div className="flex flex-wrap gap-3">
-                <Button onClick={() => setScreen("quiz")} disabled={!profile.youName.trim()}>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button
+                  className="w-full sm:w-auto"
+                  onClick={() => setScreen("quiz")}
+                  disabled={!profile.youName.trim()}
+                >
                   Start
                 </Button>
-                <Button variant="secondary" onClick={() => setScreen("summary")}>
+                <Button
+                  variant="ghost"
+                  className="w-full sm:w-auto"
+                  onClick={() => setScreen("summary")}
+                >
                   View summary
                 </Button>
               </div>
@@ -193,19 +206,21 @@ export default function AuthorityApp() {
               <CardHeader className="space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="text-sm text-[color:var(--muted)]">
-                    {PILLAR_LABEL[q.pillar]} • Question {step + 1} of {QUESTIONS.length}
+                    Step {step + 1} of {QUESTIONS.length} • {PILLAR_LABEL[q.pillar]}
                   </div>
                   <Badge tone="primary">{progress}% complete</Badge>
                 </div>
                 <Progress value={progress} />
               </CardHeader>
-              <CardBody>
-                <div className="text-2xl font-semibold text-[color:var(--ink)] sm:text-3xl">
-                  {q.title}
-                </div>
-                {q.help ? <div className="mt-2 text-sm text-[color:var(--muted)]">{q.help}</div> : null}
+            </Card>
 
-                <div className="mt-5 grid gap-2">
+            <Card className="bg-white/95 shadow-[var(--shadow-soft)]">
+              <CardHeader className="space-y-2">
+                <CardTitle>{q.title}</CardTitle>
+                {q.help ? <CardDescription>{q.help}</CardDescription> : null}
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-2">
                   {q.type === "single" && q.options
                     ? q.options.map((o) => (
                         <ChoiceRow
@@ -220,12 +235,12 @@ export default function AuthorityApp() {
 
                   {q.type === "scale" ? <ScaleRow current={answers[q.id]} onPick={pick} /> : null}
                 </div>
-
-              </CardBody>
+              </CardContent>
               <Divider />
-              <CardFooter className="flex items-center justify-between gap-3">
+              <CardFooter className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <Button
-                  variant="secondary"
+                  variant="ghost"
+                  className="w-full sm:w-auto"
                   onClick={() => setStep((s) => Math.max(0, s - 1))}
                   disabled={step === 0}
                 >
@@ -233,11 +248,16 @@ export default function AuthorityApp() {
                 </Button>
 
                 {!isLast ? (
-                  <Button onClick={() => setStep((s) => Math.min(QUESTIONS.length - 1, s + 1))}>
+                  <Button
+                    className="w-full sm:w-auto"
+                    onClick={() => setStep((s) => Math.min(QUESTIONS.length - 1, s + 1))}
+                  >
                     Next
                   </Button>
                 ) : (
-                  <Button onClick={() => setScreen("summary")}>Finish</Button>
+                  <Button className="w-full sm:w-auto" onClick={() => setScreen("summary")}>
+                    Finish
+                  </Button>
                 )}
               </CardFooter>
             </Card>
@@ -251,11 +271,11 @@ export default function AuthorityApp() {
         {/* SUMMARY */}
         {screen === "summary" && (
           <div className="space-y-5">
-            <Card className="bg-white/90">
-              <CardBody className="flex flex-wrap items-center justify-between gap-4">
+            <Card className="bg-white/95 shadow-[var(--shadow-soft)]">
+              <CardContent className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <div className="text-sm text-[color:var(--muted)]">Your Authority Index</div>
-                  <div className="mt-1 text-4xl font-semibold leading-tight text-[color:var(--ink)]">
+                  <div className="mt-1 text-4xl font-semibold leading-tight text-[color:var(--text)]">
                     {result.overall}/100
                   </div>
                   <div className="mt-1 text-sm text-[color:var(--muted)]">
@@ -263,20 +283,22 @@ export default function AuthorityApp() {
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-3">
-                  <Button variant="secondary" onClick={() => setScreen("quiz")}>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Button variant="ghost" className="w-full sm:w-auto" onClick={() => setScreen("quiz")}>
                     Back to questions
                   </Button>
-                  <Button onClick={() => setScreen("intro")}>Home</Button>
+                  <Button className="w-full sm:w-auto" onClick={() => setScreen("intro")}>
+                    Home
+                  </Button>
                 </div>
-              </CardBody>
+              </CardContent>
             </Card>
 
             {/* Paid-worthy report */}
             <ReportView report={report} unlocked={unlocked} />
 
             {/* Authority Map (kept outside ReportView so it remains a clear “bonus” value) */}
-            <Card className="bg-white/90">
+            <Card className="bg-white/95 shadow-[var(--shadow-soft)]">
               <CardHeader className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <div className="text-sm text-[color:var(--muted)]">Authority Map</div>
@@ -286,11 +308,11 @@ export default function AuthorityApp() {
                 </div>
                 <Badge>{unlocked ? "Unlocked" : "Locked"}</Badge>
               </CardHeader>
-              <CardBody>
+              <CardContent>
                 {unlocked ? (
                   <AuthorityMap result={result} />
                 ) : (
-                  <div className="rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--bg-1)] px-5 py-4 text-sm text-[color:var(--muted)]">
+                  <div className="rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--surface2)] px-5 py-4 text-sm text-[color:var(--muted)]">
                     Teaser:{" "}
                     <span className="text-[color:var(--ink-soft)]">
                       {topTeaser ?? "No critical flags detected."}
@@ -298,20 +320,24 @@ export default function AuthorityApp() {
                     <div className="mt-2">Unlock to view the full map and deeper risk detail.</div>
                   </div>
                 )}
-              </CardBody>
+              </CardContent>
               <Divider />
-              <CardFooter className="flex flex-wrap gap-3">
-                <Button onClick={startCheckout}>
+              <CardFooter className="flex flex-col gap-3 sm:flex-row">
+                <Button className="w-full sm:w-auto" onClick={startCheckout}>
                   {unlocked ? "Report unlocked" : "Unlock full report"}
                 </Button>
 
                 {unlocked ? (
-                  <Button variant="ghost" onClick={downloadPdf}>
+                  <Button variant="ghost" className="w-full sm:w-auto" onClick={downloadPdf}>
                     Download PDF
                   </Button>
                 ) : null}
 
-                <Button variant="ghost" onClick={() => navigator.clipboard.writeText(window.location.href)}>
+                <Button
+                  variant="ghost"
+                  className="w-full sm:w-auto"
+                  onClick={() => navigator.clipboard.writeText(window.location.href)}
+                >
                   Copy link
                 </Button>
               </CardFooter>
@@ -319,6 +345,6 @@ export default function AuthorityApp() {
           </div>
         )}
       </Container>
-    </div>
+    </PageShell>
   );
 }

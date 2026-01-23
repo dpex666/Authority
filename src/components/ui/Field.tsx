@@ -19,8 +19,8 @@ export function ChoiceRow({
       className={[
         "w-full rounded-[var(--radius)] border px-4 py-3 text-left text-sm transition",
         active
-          ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-white shadow-[0_12px_24px_rgba(15,23,42,0.12)]"
-          : "border-[color:var(--border)] bg-white hover:bg-[color:var(--bg-1)] text-[color:var(--ink)]",
+          ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-white shadow-[0_12px_24px_rgba(15,23,42,0.14)]"
+          : "border-[color:var(--border)] bg-[color:var(--surface)] hover:bg-[color:var(--surface2)] text-[color:var(--text)]",
       ].join(" ")}
     >
       {label}
@@ -54,8 +54,8 @@ export function ScaleRow({
             className={[
               "rounded-[var(--radius)] border px-3 py-3 text-sm transition text-center",
               active
-                ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-white shadow-[0_12px_24px_rgba(15,23,42,0.12)]"
-                : "border-[color:var(--border)] bg-white hover:bg-[color:var(--bg-1)] text-[color:var(--ink)]",
+                ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-white shadow-[0_12px_24px_rgba(15,23,42,0.14)]"
+                : "border-[color:var(--border)] bg-[color:var(--surface)] hover:bg-[color:var(--surface2)] text-[color:var(--text)]",
             ].join(" ")}
           >
             {o.label}

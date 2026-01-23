@@ -9,9 +9,9 @@ export function Progress({
   return (
     <div className="space-y-2">
       {label ? <div className="text-xs font-medium text-[color:var(--muted)]">{label}</div> : null}
-      <div className="h-2.5 w-full rounded-full bg-[color:var(--bg-1)] overflow-hidden">
+      <div className="h-2.5 w-full rounded-full bg-[color:var(--surface2)] overflow-hidden">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-[color:var(--primary)] to-[color:var(--accent)] transition-all"
+          className="h-full rounded-full bg-gradient-to-r from-[color:var(--primary)] to-[color:var(--primary2)] transition-all"
           style={{ width: `${v}%` }}
         />
       </div>
