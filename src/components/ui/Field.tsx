@@ -18,7 +18,9 @@ export function ChoiceRow({
       onClick={() => onPick(value)}
       className={[
         "w-full rounded-xl border px-4 py-3 text-left text-sm transition",
-        active ? "border-zinc-900 bg-zinc-900 text-white" : "border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-900",
+        active
+          ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-white"
+          : "border-[color:var(--border)] bg-white hover:bg-[color:var(--bg-1)] text-[color:var(--ink)]",
       ].join(" ")}
     >
       {label}
@@ -51,7 +53,9 @@ export function ScaleRow({
             onClick={() => onPick(o.v)}
             className={[
               "rounded-xl border px-3 py-3 text-sm transition text-center",
-              active ? "border-zinc-900 bg-zinc-900 text-white" : "border-zinc-200 bg-white hover:bg-zinc-50",
+              active
+                ? "border-[color:var(--primary)] bg-[color:var(--primary)] text-white"
+                : "border-[color:var(--border)] bg-white hover:bg-[color:var(--bg-1)] text-[color:var(--ink)]",
             ].join(" ")}
           >
             {o.label}

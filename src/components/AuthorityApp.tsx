@@ -111,15 +111,15 @@ React.useEffect(() => {
 
   return (
     <div className="min-h-screen">
-      <div className="mx-auto max-w-3xl px-4 py-10">
+      <div className="mx-auto max-w-4xl px-4 py-12">
         {/* Top bar */}
         <div className="mb-8 flex items-start justify-between gap-4">
           <div>
-            <div className="text-xs tracking-widest text-black/50">AUTHORITY</div>
-            <div className="mt-1 text-3xl font-semibold text-[color:var(--ink)]">
+            <div className="text-xs tracking-[0.3em] text-[color:var(--muted)]">AUTHORITY</div>
+            <div className="mt-2 text-[44px] font-bold leading-[1.05] text-[color:var(--ink)] sm:text-[55px] lg:text-[80px]">
               Know who has power. Keep control.
             </div>
-            <div className="mt-2 text-sm text-[color:var(--muted)]">
+            <div className="mt-3 max-w-xl text-base text-[color:var(--muted)]">
               A calm, practical readiness check. One question at a time.
             </div>
           </div>
@@ -139,7 +139,7 @@ React.useEffect(() => {
               <Pill>Report: {unlocked ? "Unlocked" : "Locked"}</Pill>
             </div>
 
-            <div className="mt-6 space-y-3 text-[color:var(--ink-soft)]">
+            <div className="mt-6 space-y-3 text-base text-[color:var(--ink-soft)]">
               <div>
                 Authority maps where decisions, access, and digital control actually sit — and where it breaks under stress.
               </div>
@@ -148,48 +148,45 @@ React.useEffect(() => {
               </div>
             </div>
 
-<div className="mt-6 grid gap-3 sm:grid-cols-2">
-  <div>
-    <div className="text-sm font-medium text-[color:var(--ink)]">
-      Your name
-    </div>
-    <input
-      value={profile.youName}
-      onChange={(e) =>
-        setProfile((p) => ({ ...p, youName: e.target.value }))
-      }
-      placeholder="e.g. Dan"
-      className="mt-2 w-full rounded-2xl border border-black/10 bg-white/80 px-4 py-3 text-sm text-black outline-none focus:ring-2 focus:ring-black/10"
-    />
-  </div>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <div>
+                <div className="text-sm font-medium text-[color:var(--ink)]">
+                  Your name
+                </div>
+                <input
+                  value={profile.youName}
+                  onChange={(e) =>
+                    setProfile((p) => ({ ...p, youName: e.target.value }))
+                  }
+                  placeholder="e.g. Dan"
+                  className="mt-2 w-full rounded-2xl border border-[color:var(--border)] bg-white px-4 py-3 text-base text-[color:var(--ink)] outline-none transition focus:border-[color:var(--primary)] focus:ring-2 focus:ring-[color:var(--primary)]/15"
+                />
+              </div>
 
-  <div>
-    <div className="text-sm font-medium text-[color:var(--ink)]">
-      Partner name (optional)
-    </div>
-    <input
-      value={profile.partnerName || ""}
-      onChange={(e) =>
-        setProfile((p) => ({ ...p, partnerName: e.target.value }))
-      }
-      placeholder="e.g. Kat"
-      className="mt-2 w-full rounded-2xl border border-black/10 bg-white/80 px-4 py-3 text-sm text-black outline-none focus:ring-2 focus:ring-black/10"
-    />
-  </div>
-</div>
+              <div>
+                <div className="text-sm font-medium text-[color:var(--ink)]">
+                  Partner name (optional)
+                </div>
+                <input
+                  value={profile.partnerName || ""}
+                  onChange={(e) =>
+                    setProfile((p) => ({ ...p, partnerName: e.target.value }))
+                  }
+                  placeholder="e.g. Kat"
+                  className="mt-2 w-full rounded-2xl border border-[color:var(--border)] bg-white px-4 py-3 text-base text-[color:var(--ink)] outline-none transition focus:border-[color:var(--primary)] focus:ring-2 focus:ring-[color:var(--primary)]/15"
+                />
+              </div>
+            </div>
 
-<div className="mt-2 text-xs text-[color:var(--muted)]">
-  Used only to personalise your report. Stored locally.
-</div>
+            <div className="mt-2 text-xs text-[color:var(--muted)]">
+              Used only to personalise your report. Stored locally.
+            </div>
 
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button
-  onClick={() => setScreen("quiz")}
-  disabled={!profile.youName.trim()}
->
-  Start
-</Button>
+              <Button onClick={() => setScreen("quiz")} disabled={!profile.youName.trim()}>
+                Start
+              </Button>
 
               <Button variant="secondary" onClick={() => setScreen("summary")}>
                 View summary
@@ -212,7 +209,9 @@ React.useEffect(() => {
             <Progress value={progress} />
 
             <Card className="bg-[color:var(--card-strong)]">
-              <div className="text-xl font-semibold text-[color:var(--ink)]">{q.title}</div>
+              <div className="text-[28px] font-semibold text-[color:var(--ink)] sm:text-[48px]">
+                {q.title}
+              </div>
               {q.help ? <div className="mt-2 text-sm text-[color:var(--muted)]">{q.help}</div> : null}
 
               <div className="mt-5 grid gap-2">
@@ -260,7 +259,7 @@ React.useEffect(() => {
             <div className="flex items-center justify-between gap-4">
               <div>
                 <div className="text-sm text-[color:var(--muted)]">Your Authority Index</div>
-                <div className="mt-1 text-3xl font-semibold text-[color:var(--ink)]">{result.overall}/100</div>
+                <div className="mt-1 text-[48px] font-semibold leading-tight text-[color:var(--ink)]">{result.overall}/100</div>
                 <div className="mt-1 text-sm text-[color:var(--muted)]">Status: {overallLabel(result.overall)}</div>
               </div>
 
@@ -292,7 +291,7 @@ React.useEffect(() => {
                   <AuthorityMap result={result} />
                 </div>
               ) : (
-                <div className="mt-4 rounded-2xl border border-black/10 bg-white/70 px-5 py-4 text-sm text-[color:var(--muted)]">
+                <div className="mt-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg-1)] px-5 py-4 text-sm text-[color:var(--muted)]">
                   Teaser:{" "}
                   <span className="text-[color:var(--ink-soft)]">
                     {topTeaser ?? "No critical flags detected."}

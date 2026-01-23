@@ -10,7 +10,7 @@ export function Card({
   return (
     <div
       className={[
-        "rounded-3xl border shadow-sm",
+        "rounded-3xl border shadow-sm shadow-[color:var(--primary)]/5",
         "border-[color:var(--border)]",
         "bg-[color:var(--card)] backdrop-blur",
         "px-6 py-6",
