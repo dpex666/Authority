@@ -1,11 +1,10 @@
-import type { AuthorityAnswers, AuthorityPillar } from "@/lib/authority/types";
+import type { AnswerValue, AuthorityAnswers, AuthorityPillar } from "@/lib/authority/types";
 import type {
   AuthorityReport,
   ReportAction,
   ReportRisk,
   ReportPillarSummary,
   ReportPackItem,
-  ActionOwner,
   ActionEffort,
   ActionImpact,
   ActionDue,
@@ -21,12 +20,16 @@ function clamp(n: number, min: number, max: number) {
 type Single = "yes" | "no" | "unsure" | "na";
 type Scale = number; // we’ll assume 1–5 (or 0–10). We handle both.
 
-function asSingle(v: any): Single | null {
+function asSingle(v: unknown): Single | null {
   if (v === "yes" || v === "no" || v === "unsure" || v === "na") return v;
   return null;
 }
 
-function asScale(v: any): Scale | null {
+function asScale(v: unknown): Scale | null {
+  if (v === "low") return 1;
+  if (v === "medium") return 3;
+  if (v === "high") return 5;
+  if (v === "unsure" || v === "na") return null;
   const n = typeof v === "number" ? v : Number(v);
   if (Number.isFinite(n)) return n;
   return null;
@@ -67,11 +70,6 @@ function mkAction(partial: Omit<ReportAction, "id">, i: number): ReportAction {
   return { id: `action_${i}`, ...partial };
 }
 
-function addUniqueByTitle<T extends { title: string }>(arr: T[], item: T) {
-  if (arr.some((x) => x.title.toLowerCase() === item.title.toLowerCase())) return;
-  arr.push(item);
-}
-
 function priorityScore(sev: RiskSeverity, tf: RiskTimeframe): number {
   const s = sev === "High" ? 3 : sev === "Medium" ? 2 : 1;
   const t = tf === "0–48 hours" ? 3 : tf === "3–7 days" ? 2 : 1;
@@ -93,10 +91,6 @@ function effortRank(e: ActionEffort): number {
     "1 day": 5,
   };
   return map[e];
-}
-
-function chooseOwner(primary: ActionOwner, fallback: ActionOwner): ActionOwner {
-  return primary ?? fallback;
 }
 
 function fmtNowLabel() {
@@ -126,25 +120,26 @@ export function generateReport(answers: AuthorityAnswers, profile?: { youName?: 
   const pAlignment = pillars.find((p) => p.pillar === "alignment")?.score ?? 100;
 
   // --- Read actual question answers ---
-  const dec_1 = asSingle((answers as any)["dec_1"]);
-  const dec_2 = asSingle((answers as any)["dec_2"]);
-  const dec_3 = asScale((answers as any)["dec_3"]); // conflict likelihood
+  const get = (id: string): AnswerValue | undefined => answers[id];
+  const dec_1 = asSingle(get("dec_1"));
+  const dec_2 = asSingle(get("dec_2"));
+  const dec_3 = asScale(get("dec_3")); // conflict likelihood
 
-  const acc_1 = asSingle((answers as any)["acc_1"]);
-  const acc_2 = asSingle((answers as any)["acc_2"]);
-  const acc_3 = asScale((answers as any)["acc_3"]); // single-person dependency
+  const acc_1 = asSingle(get("acc_1"));
+  const acc_2 = asSingle(get("acc_2"));
+  const acc_3 = asScale(get("acc_3")); // single-person dependency
 
-  const dig_1 = asSingle((answers as any)["dig_1"]); // password manager + emergency access
-  const dig_2 = asSingle((answers as any)["dig_2"]); // plan for accounts
-  const dig_3 = asScale((answers as any)["dig_3"]); // digital exposure
+  const dig_1 = asSingle(get("dig_1")); // password manager + emergency access
+  const dig_2 = asSingle(get("dig_2")); // plan for accounts
+  const dig_3 = asScale(get("dig_3")); // digital exposure
 
-  const exe_1 = asSingle((answers as any)["exe_1"]); // chosen executor can handle load
-  const exe_2 = asSingle((answers as any)["exe_2"]); // would say yes today
-  const exe_3 = asScale((answers as any)["exe_3"]); // burnout risk
+  const exe_1 = asSingle(get("exe_1")); // chosen executor can handle load
+  const exe_2 = asSingle(get("exe_2")); // would say yes today
+  const exe_3 = asScale(get("exe_3")); // burnout risk
 
-  const ali_1 = asSingle((answers as any)["ali_1"]); // agree on what you'd want
-  const ali_2 = asSingle((answers as any)["ali_2"]); // known tension points
-  const ali_3 = asScale((answers as any)["ali_3"]); // dispute likelihood
+  const ali_1 = asSingle(get("ali_1")); // agree on what you'd want
+  const ali_2 = asSingle(get("ali_2")); // known tension points
+  const ali_3 = asScale(get("ali_3")); // dispute likelihood
 
   const conflictLikely = dec_3 ? scaleToFive(dec_3) >= 4 : pDecision < 55;
   const adminSinglePoint = acc_3 ? scaleToFive(acc_3) >= 4 : pAccess < 55;
@@ -756,7 +751,6 @@ export function generateReport(answers: AuthorityAnswers, profile?: { youName?: 
     keyWeak.length > 0 ? `Key focus areas: ${Array.from(new Set(keyWeak)).slice(0, 3).join(" • ")}` : "Readiness check";
 
   // --- Personalised insight block (the “this is about me” moment) ---
-  const riskNames = topRisks.map((r) => r.title);
   const primaryRisk = topRisks[0];
 
   const headline =
@@ -815,15 +809,11 @@ export function generateReport(answers: AuthorityAnswers, profile?: { youName?: 
     tomorrowSnapshot.push("Fastest win: write the 48-hour plan (who, what, where) so nobody guesses.");
   }
 
-    
   // Final report
-      const you = (profile?.youName || "").trim();
+  const you = (profile?.youName || "").trim();
   const partner = (profile?.partnerName || "").trim();
 
-  const displayName =
-    you && partner ? `${you} + ${partner}` :
-    you ? you :
-    "Your household";
+  const displayName = you && partner ? `${you} + ${partner}` : you ? you : "Your household";
 
   return {
     subject: "Authority Report",

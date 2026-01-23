@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { QUESTIONS } from "@/lib/authority/questions";
-import type { AuthorityAnswers, AuthorityPillar } from "@/lib/authority/types";
+import type { AnswerValue, AuthorityAnswers, AuthorityPillar } from "@/lib/authority/types";
 import { scoreAuthority, overallLabel } from "@/lib/authority/score";
 import { loadAnswers, saveAnswers, clearAnswers } from "@/lib/authority/storage";
 import { isUnlocked, setUnlocked as setUnlockedLS, clearUnlocked } from "@/lib/authority/paywall";
@@ -80,7 +80,7 @@ React.useEffect(() => {
   const isLast = step === QUESTIONS.length - 1;
   const progress = Math.round(((step + 1) / QUESTIONS.length) * 100);
 
-  function pick(val: any) {
+  function pick(val: AnswerValue) {
     setAnswers((prev) => ({ ...prev, [q.id]: val }));
   }
 
