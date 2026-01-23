@@ -2,6 +2,8 @@ import Link from "next/link";
 import ReportView from "@/components/ReportView";
 import { generateReport } from "@/lib/authority/report";
 import type { AuthorityAnswers } from "@/lib/authority/types";
+import { Container } from "@/components/ui/Container";
+import { buttonStyles } from "@/components/ui/Button";
 
 export default function ExamplePage() {
   // Example answers (just enough to generate a meaningful report)
@@ -14,27 +16,23 @@ export default function ExamplePage() {
 
   return (
     <div className="min-h-screen">
-      <div className="mx-auto max-w-4xl px-4 py-12">
+      <Container className="py-12 sm:py-14">
         <div className="mb-8">
-          <div className="text-xs tracking-[0.3em] text-[color:var(--muted)]">AUTHORITY</div>
-          <h1 className="mt-2 text-[44px] font-bold leading-[1.05] text-[color:var(--ink)] sm:text-[55px] lg:text-[80px]">
+          <div className="inline-flex items-center rounded-full border border-[color:var(--border)] bg-white/80 px-3 py-1 text-xs font-medium text-[color:var(--muted)]">
+            Example report layout
+          </div>
+          <h1 className="mt-3 text-4xl font-semibold leading-tight text-[color:var(--ink)] sm:text-5xl lg:text-6xl">
             Authority Report
           </h1>
           <p className="mt-3 text-base text-[color:var(--muted)]">
-            Example report layout and structure.
+            Preview how the unlocked report is structured, written, and prioritized.
           </p>
 
           <div className="mt-5 flex flex-wrap gap-3">
-            <Link
-              href="/quiz"
-              className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium bg-[color:var(--primary)] text-white shadow-sm shadow-[color:var(--primary)]/10 hover:bg-[#163a35] transition"
-            >
+            <Link href="/quiz" className={buttonStyles({ variant: "primary", size: "lg" })}>
               Start your report
             </Link>
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium bg-[color:var(--secondary)] text-[color:var(--primary)] border border-[color:var(--primary)]/20 hover:bg-[#c3dec0] transition"
-            >
+            <Link href="/" className={buttonStyles({ variant: "secondary", size: "lg" })}>
               Back
             </Link>
           </div>
@@ -42,7 +40,7 @@ export default function ExamplePage() {
 
         {/* Example page should look "unlocked" so people see value */}
         <ReportView report={report} unlocked={true} />
-      </div>
+      </Container>
     </div>
   );
 }

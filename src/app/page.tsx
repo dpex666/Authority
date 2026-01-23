@@ -1,68 +1,80 @@
 import Link from "next/link";
+import { Container } from "@/components/ui/Container";
+import { Card } from "@/components/ui/Card";
+import { Divider } from "@/components/ui/Divider";
+import { buttonStyles } from "@/components/ui/Button";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen">
-      <div className="mx-auto max-w-3xl px-4 py-12">
-        <div className="mb-10">
-          <div className="text-xs tracking-widest text-black/50">AUTHORITY</div>
-          <h1 className="mt-2 text-4xl font-semibold text-black">
-            Know who has power. Keep control.
-          </h1>
-          <p className="mt-3 text-base text-black/60">
-            A fast readiness check that shows where decision-making, access, and digital control
-            actually sit, and where it’s fragile.
-          </p>
-        </div>
-
-        <div className="rounded-3xl border border-black/10 bg-white/70 px-7 py-7">
-          <div className="grid gap-5">
-            <div>
-              <div className="text-sm font-medium text-black">What it does</div>
-              <ul className="mt-2 list-disc pl-5 text-sm text-black/70 space-y-1">
-                <li>Maps who can decide, who can access, and who can execute.</li>
-                <li>Flags single points of failure and “grey area” authority.</li>
-                <li>Generates a report you can share with family or advisors.</li>
-              </ul>
+      <Container className="py-12 sm:py-16">
+        <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div>
+            <div className="inline-flex items-center rounded-full border border-[color:var(--border)] bg-white/80 px-3 py-1 text-xs font-medium text-[color:var(--muted)] shadow-sm">
+              3–5 minute authority readiness check
             </div>
-
-            <div className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border border-black/10 bg-white/80 p-4">
-                <div className="text-sm font-medium text-black">3–5 mins</div>
-                <div className="mt-1 text-xs text-black/60">15 questions, one at a time.</div>
-              </div>
-              <div className="rounded-2xl border border-black/10 bg-white/80 p-4">
-                <div className="text-sm font-medium text-black">Local-first</div>
-                <div className="mt-1 text-xs text-black/60">Nothing sent anywhere by default.</div>
-              </div>
-              <div className="rounded-2xl border border-black/10 bg-white/80 p-4">
-                <div className="text-sm font-medium text-black">Actionable</div>
-                <div className="mt-1 text-xs text-black/60">Clear flags, not fluff.</div>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-3 pt-1">
-              <Link
-                href="/quiz"
-                className="inline-flex items-center justify-center rounded-2xl px-6 py-3 text-sm font-medium bg-[#141414] text-white hover:bg-black transition"
-              >
+            <h1 className="mt-4 text-4xl font-semibold leading-tight text-[color:var(--ink)] sm:text-5xl lg:text-6xl">
+              Know who has power.
+              <span className="block text-[color:var(--ink-soft)]">Keep control.</span>
+            </h1>
+            <p className="mt-4 text-base text-[color:var(--muted)] sm:text-lg">
+              A fast, calm readiness check showing where decision-making, access, and digital
+              control actually sit — and where it’s fragile.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href="/quiz" className={buttonStyles({ variant: "primary", size: "lg" })}>
                 Start the check
               </Link>
-
-              <Link
-                href="/example"
-                className="inline-flex items-center justify-center rounded-2xl px-6 py-3 text-sm font-medium bg-white text-[#141414] border border-black/15 hover:bg-black/5 transition"
-              >
+              <Link href="/example" className={buttonStyles({ variant: "secondary", size: "lg" })}>
                 View example summary
               </Link>
             </div>
-
-            <div className="text-xs text-black/50">
+            <div className="mt-4 text-xs text-[color:var(--muted)]">
               Not legal advice. If you’re unsure, speak to a qualified professional.
             </div>
           </div>
+
+          <Card className="bg-white/80">
+            <div className="grid gap-6 p-6">
+              <div>
+                <div className="text-sm font-semibold text-[color:var(--ink)]">What it does</div>
+                <ul className="mt-3 space-y-2 text-sm text-[color:var(--muted)]">
+                  <li>• Maps who can decide, who can access, and who can execute.</li>
+                  <li>• Flags single points of failure and “grey area” authority.</li>
+                  <li>• Generates a report you can share with family or advisors.</li>
+                </ul>
+              </div>
+
+              <Divider />
+
+              <div className="grid gap-4 sm:grid-cols-3">
+                {[
+                  {
+                    title: "3–5 mins",
+                    desc: "15 questions, one at a time.",
+                  },
+                  {
+                    title: "Local-first",
+                    desc: "Nothing sent anywhere by default.",
+                  },
+                  {
+                    title: "Actionable",
+                    desc: "Clear flags, not fluff.",
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.title}
+                    className="rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-4 py-4 shadow-sm"
+                  >
+                    <div className="text-sm font-semibold text-[color:var(--ink)]">{item.title}</div>
+                    <div className="mt-1 text-xs text-[color:var(--muted)]">{item.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

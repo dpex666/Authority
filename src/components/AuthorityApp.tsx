@@ -9,11 +9,14 @@ import { isUnlocked, setUnlocked as setUnlockedLS, clearUnlocked } from "@/lib/a
 import { exportReportPdf } from "@/lib/authority/exportPdf";
 import { generateReport } from "@/lib/authority/report";
 
-import { Card } from "./ui/Card";
+import { Card, CardBody, CardFooter, CardHeader } from "./ui/Card";
 import { Progress } from "./ui/Progress";
-import { Pill } from "./ui/Pill";
 import { Button } from "./ui/Button";
 import { ChoiceRow, ScaleRow } from "./ui/Field";
+import { Container } from "./ui/Container";
+import { Input } from "./ui/Input";
+import { Badge } from "./ui/Badge";
+import { Divider } from "./ui/Divider";
 
 import AuthorityMap from "./AuthorityMap";
 import ReportView from "@/components/ReportView";
@@ -64,9 +67,9 @@ export default function AuthorityApp() {
     }
   }, []);
 
-React.useEffect(() => {
-  saveProfile(profile);
-}, [profile]);
+  React.useEffect(() => {
+    saveProfile(profile);
+  }, [profile]);
 
   React.useEffect(() => {
     saveAnswers(answers);
@@ -111,16 +114,16 @@ React.useEffect(() => {
 
   return (
     <div className="min-h-screen">
-      <div className="mx-auto max-w-4xl px-4 py-12">
+      <Container className="py-10 sm:py-12">
         {/* Top bar */}
-        <div className="mb-8 flex items-start justify-between gap-4">
+        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <div className="text-xs tracking-[0.3em] text-[color:var(--muted)]">AUTHORITY</div>
-            <div className="mt-2 text-[44px] font-bold leading-[1.05] text-[color:var(--ink)] sm:text-[55px] lg:text-[80px]">
-              Know who has power. Keep control.
+            <div className="text-sm font-medium text-[color:var(--muted)]">Authority check</div>
+            <div className="mt-2 text-3xl font-semibold leading-tight text-[color:var(--ink)] sm:text-4xl">
+              Your current authority readiness
             </div>
-            <div className="mt-3 max-w-xl text-base text-[color:var(--muted)]">
-              A calm, practical readiness check. One question at a time.
+            <div className="mt-2 max-w-xl text-sm text-[color:var(--muted)] sm:text-base">
+              One question at a time. Calm, structured, and designed for clear next steps.
             </div>
           </div>
           <Button variant="ghost" onClick={reset}>
@@ -130,68 +133,55 @@ React.useEffect(() => {
 
         {/* INTRO */}
         {screen === "intro" && (
-          <Card className="bg-[color:var(--card-strong)]">
-            <div className="text-sm text-[color:var(--muted)]">Your current</div>
-
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-              <Pill>Index: {result.overall}/100</Pill>
-              <Pill>Status: {overallLabel(result.overall)}</Pill>
-              <Pill>Report: {unlocked ? "Unlocked" : "Locked"}</Pill>
-            </div>
-
-            <div className="mt-6 space-y-3 text-base text-[color:var(--ink-soft)]">
-              <div>
-                Authority maps where decisions, access, and digital control actually sit — and where it breaks under stress.
+          <Card className="bg-white/90">
+            <CardHeader>
+              <div className="text-sm text-[color:var(--muted)]">Your current</div>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <Badge tone="primary">Index: {result.overall}/100</Badge>
+                <Badge>Status: {overallLabel(result.overall)}</Badge>
+                <Badge>Report: {unlocked ? "Unlocked" : "Locked"}</Badge>
               </div>
-              <div>
-                You’ll answer <b>{QUESTIONS.length}</b> questions. Takes about <b>3–5 minutes</b>.
-              </div>
-            </div>
-
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              <div>
-                <div className="text-sm font-medium text-[color:var(--ink)]">
-                  Your name
+            </CardHeader>
+            <CardBody className="space-y-5">
+              <div className="space-y-2 text-sm text-[color:var(--ink-soft)] sm:text-base">
+                <div>
+                  Authority maps where decisions, access, and digital control actually sit — and
+                  where it breaks under stress.
                 </div>
-                <input
+                <div>
+                  You’ll answer <b>{QUESTIONS.length}</b> questions. Takes about <b>3–5 minutes</b>.
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Input
+                  label="Your name"
                   value={profile.youName}
-                  onChange={(e) =>
-                    setProfile((p) => ({ ...p, youName: e.target.value }))
-                  }
+                  onChange={(e) => setProfile((p) => ({ ...p, youName: e.target.value }))}
                   placeholder="e.g. Dan"
-                  className="mt-2 w-full rounded-2xl border border-[color:var(--border)] bg-white px-4 py-3 text-base text-[color:var(--ink)] outline-none transition focus:border-[color:var(--primary)] focus:ring-2 focus:ring-[color:var(--primary)]/15"
                 />
-              </div>
-
-              <div>
-                <div className="text-sm font-medium text-[color:var(--ink)]">
-                  Partner name (optional)
-                </div>
-                <input
+                <Input
+                  label="Partner name (optional)"
                   value={profile.partnerName || ""}
-                  onChange={(e) =>
-                    setProfile((p) => ({ ...p, partnerName: e.target.value }))
-                  }
+                  onChange={(e) => setProfile((p) => ({ ...p, partnerName: e.target.value }))}
                   placeholder="e.g. Kat"
-                  className="mt-2 w-full rounded-2xl border border-[color:var(--border)] bg-white px-4 py-3 text-base text-[color:var(--ink)] outline-none transition focus:border-[color:var(--primary)] focus:ring-2 focus:ring-[color:var(--primary)]/15"
                 />
               </div>
-            </div>
-
-            <div className="mt-2 text-xs text-[color:var(--muted)]">
-              Used only to personalise your report. Stored locally.
-            </div>
-
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button onClick={() => setScreen("quiz")} disabled={!profile.youName.trim()}>
-                Start
-              </Button>
-
-              <Button variant="secondary" onClick={() => setScreen("summary")}>
-                View summary
-              </Button>
-            </div>
+              <div className="text-xs text-[color:var(--muted)]">
+                Used only to personalise your report. Stored locally.
+              </div>
+            </CardBody>
+            <Divider />
+            <CardFooter>
+              <div className="flex flex-wrap gap-3">
+                <Button onClick={() => setScreen("quiz")} disabled={!profile.youName.trim()}>
+                  Start
+                </Button>
+                <Button variant="secondary" onClick={() => setScreen("summary")}>
+                  View summary
+                </Button>
+              </div>
+            </CardFooter>
           </Card>
         )}
 
@@ -199,38 +189,41 @@ React.useEffect(() => {
         {screen === "quiz" && (
           <div className="space-y-5">
             {/* progress row */}
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-[color:var(--muted)]">
-                {PILLAR_LABEL[q.pillar]} • Question {step + 1} of {QUESTIONS.length}
-              </div>
-              <Pill>{progress}%</Pill>
-            </div>
+            <Card className="bg-white/90">
+              <CardHeader className="space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-sm text-[color:var(--muted)]">
+                    {PILLAR_LABEL[q.pillar]} • Question {step + 1} of {QUESTIONS.length}
+                  </div>
+                  <Badge tone="primary">{progress}% complete</Badge>
+                </div>
+                <Progress value={progress} />
+              </CardHeader>
+              <CardBody>
+                <div className="text-2xl font-semibold text-[color:var(--ink)] sm:text-3xl">
+                  {q.title}
+                </div>
+                {q.help ? <div className="mt-2 text-sm text-[color:var(--muted)]">{q.help}</div> : null}
 
-            <Progress value={progress} />
+                <div className="mt-5 grid gap-2">
+                  {q.type === "single" && q.options
+                    ? q.options.map((o) => (
+                        <ChoiceRow
+                          key={o.value}
+                          value={o.value}
+                          current={answers[q.id]}
+                          label={o.label}
+                          onPick={pick}
+                        />
+                      ))
+                    : null}
 
-            <Card className="bg-[color:var(--card-strong)]">
-              <div className="text-[28px] font-semibold text-[color:var(--ink)] sm:text-[48px]">
-                {q.title}
-              </div>
-              {q.help ? <div className="mt-2 text-sm text-[color:var(--muted)]">{q.help}</div> : null}
+                  {q.type === "scale" ? <ScaleRow current={answers[q.id]} onPick={pick} /> : null}
+                </div>
 
-              <div className="mt-5 grid gap-2">
-                {q.type === "single" && q.options
-                  ? q.options.map((o) => (
-                      <ChoiceRow
-                        key={o.value}
-                        value={o.value}
-                        current={answers[q.id]}
-                        label={o.label}
-                        onPick={pick}
-                      />
-                    ))
-                  : null}
-
-                {q.type === "scale" ? <ScaleRow current={answers[q.id]} onPick={pick} /> : null}
-              </div>
-
-              <div className="mt-7 flex items-center justify-between gap-3">
+              </CardBody>
+              <Divider />
+              <CardFooter className="flex items-center justify-between gap-3">
                 <Button
                   variant="secondary"
                   onClick={() => setStep((s) => Math.max(0, s - 1))}
@@ -240,11 +233,13 @@ React.useEffect(() => {
                 </Button>
 
                 {!isLast ? (
-                  <Button onClick={() => setStep((s) => Math.min(QUESTIONS.length - 1, s + 1))}>Next</Button>
+                  <Button onClick={() => setStep((s) => Math.min(QUESTIONS.length - 1, s + 1))}>
+                    Next
+                  </Button>
                 ) : (
                   <Button onClick={() => setScreen("summary")}>Finish</Button>
                 )}
-              </div>
+              </CardFooter>
             </Card>
 
             <div className="text-xs text-[color:var(--muted)]">
@@ -256,53 +251,59 @@ React.useEffect(() => {
         {/* SUMMARY */}
         {screen === "summary" && (
           <div className="space-y-5">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <div className="text-sm text-[color:var(--muted)]">Your Authority Index</div>
-                <div className="mt-1 text-[48px] font-semibold leading-tight text-[color:var(--ink)]">{result.overall}/100</div>
-                <div className="mt-1 text-sm text-[color:var(--muted)]">Status: {overallLabel(result.overall)}</div>
-              </div>
+            <Card className="bg-white/90">
+              <CardBody className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <div className="text-sm text-[color:var(--muted)]">Your Authority Index</div>
+                  <div className="mt-1 text-4xl font-semibold leading-tight text-[color:var(--ink)]">
+                    {result.overall}/100
+                  </div>
+                  <div className="mt-1 text-sm text-[color:var(--muted)]">
+                    Status: {overallLabel(result.overall)}
+                  </div>
+                </div>
 
-              <div className="flex flex-wrap gap-3">
-                <Button variant="secondary" onClick={() => setScreen("quiz")}>
-                  Back to questions
-                </Button>
-                <Button onClick={() => setScreen("intro")}>Home</Button>
-              </div>
-            </div>
+                <div className="flex flex-wrap gap-3">
+                  <Button variant="secondary" onClick={() => setScreen("quiz")}>
+                    Back to questions
+                  </Button>
+                  <Button onClick={() => setScreen("intro")}>Home</Button>
+                </div>
+              </CardBody>
+            </Card>
 
             {/* Paid-worthy report */}
             <ReportView report={report} unlocked={unlocked} />
 
             {/* Authority Map (kept outside ReportView so it remains a clear “bonus” value) */}
-            <Card className="bg-[color:var(--card-strong)]">
-              <div className="flex items-center justify-between">
+            <Card className="bg-white/90">
+              <CardHeader className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <div className="text-sm text-[color:var(--muted)]">Authority Map</div>
                   <div className="mt-1 text-sm text-[color:var(--muted)]">
                     Visualises overlaps, gaps, and single points of failure.
                   </div>
                 </div>
-                <Pill>{unlocked ? "Unlocked" : "Locked"}</Pill>
-              </div>
-
-              {unlocked ? (
-                <div className="mt-4">
+                <Badge>{unlocked ? "Unlocked" : "Locked"}</Badge>
+              </CardHeader>
+              <CardBody>
+                {unlocked ? (
                   <AuthorityMap result={result} />
-                </div>
-              ) : (
-                <div className="mt-4 rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg-1)] px-5 py-4 text-sm text-[color:var(--muted)]">
-                  Teaser:{" "}
-                  <span className="text-[color:var(--ink-soft)]">
-                    {topTeaser ?? "No critical flags detected."}
-                  </span>
-                  <div className="mt-2">Unlock to view the full map and deeper risk detail.</div>
-                </div>
-              )}
-
-              {/* Controls */}
-              <div className="mt-5 flex flex-wrap gap-3">
-                <Button onClick={startCheckout}>{unlocked ? "Report unlocked" : "Unlock full report"}</Button>
+                ) : (
+                  <div className="rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--bg-1)] px-5 py-4 text-sm text-[color:var(--muted)]">
+                    Teaser:{" "}
+                    <span className="text-[color:var(--ink-soft)]">
+                      {topTeaser ?? "No critical flags detected."}
+                    </span>
+                    <div className="mt-2">Unlock to view the full map and deeper risk detail.</div>
+                  </div>
+                )}
+              </CardBody>
+              <Divider />
+              <CardFooter className="flex flex-wrap gap-3">
+                <Button onClick={startCheckout}>
+                  {unlocked ? "Report unlocked" : "Unlock full report"}
+                </Button>
 
                 {unlocked ? (
                   <Button variant="ghost" onClick={downloadPdf}>
@@ -313,11 +314,11 @@ React.useEffect(() => {
                 <Button variant="ghost" onClick={() => navigator.clipboard.writeText(window.location.href)}>
                   Copy link
                 </Button>
-              </div>
+              </CardFooter>
             </Card>
           </div>
         )}
-      </div>
+      </Container>
     </div>
   );
 }

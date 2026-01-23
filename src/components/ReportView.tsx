@@ -1,12 +1,7 @@
 import type { AuthorityReport } from "@/lib/authority/reportTypes";
-
-function Badge({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center rounded-full border border-[color:var(--border)] bg-[color:var(--bg-1)] px-3 py-1 text-xs text-[color:var(--muted)]">
-      {children}
-    </span>
-  );
-}
+import { Badge } from "./ui/Badge";
+import { Card } from "./ui/Card";
+import { Divider } from "./ui/Divider";
 
 function SectionTitle({ title, desc }: { title: string; desc?: string }) {
   return (
@@ -47,26 +42,26 @@ export default function ReportView({
   unlocked: boolean;
 }) {
   return (
-    <div
+    <Card
       id="report-root"
-      className="rounded-3xl border border-[color:var(--border)] bg-white px-7 py-7 shadow-sm shadow-[color:var(--primary)]/5"
+      className="bg-white/95 p-6 sm:p-8"
     >
-      <div className="flex flex-wrap items-start justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
           <div className="text-sm text-[color:var(--muted)]">{report.profile.context}</div>
-          <div className="mt-1 text-[32px] font-semibold leading-tight text-[color:var(--ink)] sm:text-[48px]">
+          <div className="mt-1 text-3xl font-semibold leading-tight text-[color:var(--ink)] sm:text-4xl">
             {report.profile.name}
           </div>
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2">
             <Badge>Status: {report.status}</Badge>
             <Badge>Confidence: {report.confidence}</Badge>
             <Badge>Updated: {report.updatedAtLabel}</Badge>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg-1)] px-5 py-4">
-          <div className="text-xs tracking-widest text-[color:var(--muted)]">AUTHORITY INDEX</div>
-          <div className="mt-1 text-[48px] font-semibold leading-tight text-[color:var(--ink)]">
+        <div className="rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--bg-1)] px-5 py-4">
+          <div className="text-xs tracking-[0.2em] text-[color:var(--muted)]">AUTHORITY INDEX</div>
+          <div className="mt-1 text-4xl font-semibold leading-tight text-[color:var(--ink)]">
             {report.overall}/100
           </div>
           <div className="mt-2 text-sm text-[color:var(--muted)]">
@@ -76,8 +71,8 @@ export default function ReportView({
       </div>
 
       {report.insight ? (
-        <div className="mt-7 rounded-2xl border border-[color:var(--border)] bg-[color:var(--bg-1)] px-5 py-4">
-          <div className="text-xs tracking-widest text-[color:var(--muted)]">YOUR SNAPSHOT</div>
+        <div className="mt-7 rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--bg-1)] px-5 py-4">
+          <div className="text-xs tracking-[0.2em] text-[color:var(--muted)]">YOUR SNAPSHOT</div>
 
           <div className="mt-2 text-lg font-semibold text-[color:var(--ink)]">
             {report.insight.headline}
@@ -87,7 +82,7 @@ export default function ReportView({
             {report.insight.summary}
           </div>
 
-          <div className="mt-4 rounded-xl border border-[color:var(--border)] bg-white px-4 py-3">
+          <div className="mt-4 rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-4 py-3">
             <div className="text-xs font-medium text-[color:var(--muted)]">If tomorrow happened</div>
 
             <div className="mt-2 space-y-1 text-sm text-[color:var(--ink-soft)]">
@@ -99,15 +94,13 @@ export default function ReportView({
         </div>
       ) : null}
 
+      <Divider className="my-8" />
 
-      <div className="mt-7">
-        <SectionTitle
-          title="What breaks first"
-          desc="Top failure points, put simply."
-        />
+      <div>
+        <SectionTitle title="What breaks first" desc="Top failure points, put simply." />
         <div className="grid gap-3">
           {report.risks.map((r) => (
-            <div key={r.id} className="rounded-2xl border border-[color:var(--border)] bg-white px-5 py-4">
+            <div key={r.id} className="rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-5 py-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="text-sm font-semibold text-[color:var(--ink)]">{r.title}</div>
                 <div className="flex items-center gap-2">
@@ -126,11 +119,13 @@ export default function ReportView({
         </div>
       </div>
 
-      <div className="mt-8">
+      <Divider className="my-8" />
+
+      <div>
         <SectionTitle title="Score breakdown" desc="What moved the needle." />
         <div className="grid gap-3">
           {report.pillars.map((p) => (
-            <div key={p.pillar} className="rounded-2xl border border-[color:var(--border)] bg-white px-5 py-4">
+            <div key={p.pillar} className="rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-5 py-4">
               <div className="flex items-center justify-between">
                 <div className="font-medium text-[color:var(--ink)]">{p.name}</div>
                 <Badge>{p.score}/100</Badge>
@@ -146,11 +141,13 @@ export default function ReportView({
         </div>
       </div>
 
-      <div className="mt-8">
+      <Divider className="my-8" />
+
+      <div>
         <SectionTitle title="Next 7 days plan" desc="Clear actions with owners, effort, and timing." />
         <div className="grid gap-3">
           {report.actions.map((a) => (
-            <div key={a.id} className="rounded-2xl border border-[color:var(--border)] bg-white px-5 py-4">
+            <div key={a.id} className="rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-5 py-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="text-sm font-semibold text-[color:var(--ink)]">{a.title}</div>
                 <div className="flex flex-wrap gap-2">
@@ -162,7 +159,7 @@ export default function ReportView({
               </div>
 
               {a.template ? (
-                <div className="mt-3 rounded-xl border border-[color:var(--border)] bg-[color:var(--bg-1)] px-4 py-3">
+                <div className="mt-3 rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--bg-1)] px-4 py-3">
                   <div className="text-xs font-medium text-[color:var(--muted)]">Message template</div>
                   <div className="mt-1 text-sm text-[color:var(--ink-soft)]">{a.template}</div>
                 </div>
@@ -172,7 +169,9 @@ export default function ReportView({
         </div>
       </div>
 
-      <div className="mt-8">
+      <Divider className="my-8" />
+
+      <div>
         <SectionTitle title="Authority Pack" desc="Downloadable sheets designed for real-world use." />
         <div className="grid gap-3 sm:grid-cols-2">
           {report.pack.map((x) => {
@@ -180,7 +179,7 @@ export default function ReportView({
             return (
               <div
                 key={x.id}
-                className="relative overflow-hidden rounded-2xl border border-[color:var(--border)] bg-white px-5 py-4"
+                className="relative overflow-hidden rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-5 py-4"
               >
                 <div className="text-sm font-semibold text-[color:var(--ink)]">{x.name}</div>
                 <div className="mt-1 text-sm text-[color:var(--muted)]">{x.desc}</div>
@@ -192,7 +191,7 @@ export default function ReportView({
 
                 {isLocked ? (
                   <div className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-[2px]">
-                    <div className="rounded-2xl border border-[color:var(--border)] bg-white px-4 py-3 text-sm text-[color:var(--muted)]">
+                    <div className="rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-4 py-3 text-sm text-[color:var(--muted)]">
                       Unlock to download
                     </div>
                   </div>
@@ -203,14 +202,16 @@ export default function ReportView({
         </div>
       </div>
 
-      <div className="mt-8">
+      <Divider className="my-8" />
+
+      <div>
         <SectionTitle title="Conversation starter" desc="A short script to make the chat easier." />
         {!unlocked ? (
-          <div className="rounded-2xl border border-[color:var(--border)] bg-white px-5 py-4 text-sm text-[color:var(--muted)]">
+          <div className="rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-5 py-4 text-sm text-[color:var(--muted)]">
             Unlock to view the conversation script.
           </div>
         ) : (
-          <div className="rounded-2xl border border-[color:var(--border)] bg-white px-5 py-4 text-sm text-[color:var(--ink-soft)] space-y-2">
+          <div className="rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-5 py-4 text-sm text-[color:var(--ink-soft)] space-y-2">
             {report.script.map((line) => (
               <div key={line}>• {line}</div>
             ))}
@@ -221,6 +222,6 @@ export default function ReportView({
       <div className="mt-6 text-xs text-[color:var(--muted)]">
         This is a diagnostic tool, not legal advice.
       </div>
-    </div>
+    </Card>
   );
 }
