@@ -104,7 +104,7 @@ export default function AuthorityMap({ result }: { result: AuthorityResult }) {
   }, [result]);
 
   return (
-    <div className="h-[520px] w-full overflow-hidden rounded-2xl border border-[color:var(--border)] bg-white/60">
+    <div className="h-[520px] w-full overflow-hidden rounded-[var(--radius)] border border-[color:var(--border)] bg-white/70 shadow-[var(--shadow-subtle)]">
       <ReactFlow nodes={nodes} edges={edges} fitView>
         <MiniMap />
         <Controls />
