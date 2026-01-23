@@ -1,158 +1,106 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Divider } from "@/components/ui/Divider";
-import { Button } from "@/components/ui/Button";
-import { PageShell } from "@/components/ui/PageShell";
-import { SectionTitle } from "@/components/ui/SectionTitle";
+
+const FONT_STACK =
+  "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif";
 
 export default function HomePage() {
   const router = useRouter();
-  return (
-    <PageShell
-      mainClassName="space-y-12 sm:space-y-14"
-      actions={
-        <>
-          <Button size="sm" variant="ghost" onClick={() => router.push("/example")}>
-            Example summary
-          </Button>
-          <Button size="sm" onClick={() => router.push("/quiz")}>
-            Start the check
-          </Button>
-        </>
+  const startTimeRef = useRef<number>(0);
+  const hasScrolledRef = useRef(false);
+
+  useEffect(() => {
+    startTimeRef.current = Date.now();
+
+    const handleScroll = () => {
+      if (hasScrolledRef.current) {
+        return;
       }
-    >
-      <section className="relative overflow-hidden rounded-[var(--radius)] bg-white/70 p-6 shadow-[var(--shadow-subtle)] sm:p-8">
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute left-1/2 top-6 h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_rgba(59,130,246,0.18),_transparent_60%)] blur-2xl" />
+      if (window.scrollY > window.innerHeight * 0.8) {
+        const detail = { event: "scroll_past_fold" };
+        window.dispatchEvent(new CustomEvent("analytics", { detail }));
+        console.log("[analytics]", detail);
+        hasScrolledRef.current = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleStart = () => {
+    const elapsedSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
+    const detail = {
+      event: "check_started",
+      location: "hero_cta",
+      elapsed_seconds: elapsedSeconds,
+    };
+    window.dispatchEvent(new CustomEvent("analytics", { detail }));
+    console.log("[analytics]", detail);
+    router.push("/quiz");
+  };
+
+  return (
+    <div className="min-h-screen">
+      <div className="relative mx-auto flex min-h-screen w-full max-w-[640px] flex-col px-6 pb-28 md:px-12">
+        <div
+          className="absolute left-6 top-8 text-[18px] font-medium text-[#1a1a1a] md:left-12 md:top-12"
+          style={{ fontFamily: FONT_STACK }}
+        >
+          authority
         </div>
-        <div className="relative grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-          <div className="fade-in">
-            <div className="inline-flex items-center rounded-full border border-[color:var(--border)] bg-white/90 px-3 py-1 text-xs font-medium text-[color:var(--muted)] shadow-sm">
-              3–5 minute authority readiness check
-            </div>
-            <h1 className="mt-4 text-4xl font-semibold leading-tight text-[color:var(--text)] sm:text-5xl lg:text-6xl">
-              Know who has power.
-              <span className="block text-[color:var(--muted)]">Keep control.</span>
-            </h1>
-            <p className="mt-4 text-base text-[color:var(--muted)] sm:text-lg">
-              A fast, calm readiness check showing where decision-making, access, and digital
-              control actually sit — and where it’s fragile.
-            </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <Button size="lg" className="w-full sm:w-auto" onClick={() => router.push("/quiz")}>
-                Start the check
-              </Button>
-              <Button
-                size="lg"
-                variant="secondary"
-                className="w-full sm:w-auto"
-                onClick={() => router.push("/example")}
-              >
-                View example summary
-              </Button>
-            </div>
-            <div className="mt-4 text-xs text-[color:var(--muted)]">
-              Not legal advice. If you’re unsure, speak to a qualified professional.
+
+        <main className="pt-[60px] md:pt-[120px]">
+          <h1 className="max-w-[540px] text-[32px] font-semibold leading-[1.2] tracking-[-0.02em] text-[#0a0a0a] md:text-[48px]">
+            Before you sign. Before you hire. Before you delegate.
+            <span className="mt-4 block font-normal leading-[1.2] tracking-[-0.02em] text-[#404040]">
+              Know where your authority breaks.
+            </span>
+          </h1>
+
+          <div className="mt-10 flex flex-col items-start">
+            <button
+              type="button"
+              onClick={handleStart}
+              aria-label="Start the 5-minute authority readiness check"
+              className="inline-flex h-[52px] w-full items-center justify-center rounded-[8px] bg-[#0066FF] px-6 text-[18px] font-medium text-white transition-all duration-200 ease-in-out hover:scale-[1.02] hover:bg-[#005CE6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0066FF] md:h-[56px] md:w-auto"
+            >
+              Start 5-minute check
+              <span className="ml-1">→</span>
+            </button>
+            <div className="mt-3 w-full text-center text-[14px] font-normal text-[#666666] md:w-auto md:self-center">
+              {"Takes 5 min\u00A0·\u00A0Nothing stored\u00A0·\u00A0Get a shareable summary"}
             </div>
           </div>
 
-          <Card className="bg-white/90 shadow-[var(--shadow-soft)]">
-            <CardHeader className="space-y-3">
-              <CardTitle>What it does</CardTitle>
-              <CardDescription>
-                A structured, local-first diagnosis of authority, access, and continuity.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <ul className="space-y-2 text-sm text-[color:var(--muted)]">
-                <li>• Maps who can decide, who can access, and who can execute.</li>
-                <li>• Flags single points of failure and “grey area” authority.</li>
-                <li>• Generates a report you can share with family or advisors.</li>
-              </ul>
+          <section className="mt-20">
+            <h2 className="text-[16px] font-medium text-[#1a1a1a]">What you&apos;ll discover:</h2>
+            <ul className="mt-5 space-y-4 text-[16px] font-normal leading-[1.6] text-[#2a2a2a]">
+              <li className="flex items-start gap-3">
+                <span className="text-[20px] text-[#00A86B]">✓</span>
+                <span>Who can actually make decisions (and who thinks they can)</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-[20px] text-[#00A86B]">✓</span>
+                <span>Where authority is unclear or assumed</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-[20px] text-[#00A86B]">✓</span>
+                <span>What breaks when you&apos;re unavailable</span>
+              </li>
+            </ul>
+          </section>
+        </main>
+      </div>
 
-              <Divider />
-
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {[
-                  {
-                    title: "3–5 mins",
-                    desc: "15 questions, one at a time.",
-                  },
-                  {
-                    title: "Local-first",
-                    desc: "Nothing sent anywhere by default.",
-                  },
-                  {
-                    title: "Actionable",
-                    desc: "Clear flags, not fluff.",
-                  },
-                ].map((item) => (
-                  <div
-                    key={item.title}
-                    className="rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--surface2)] px-4 py-4 shadow-sm"
-                  >
-                    <div className="flex items-center gap-2 text-sm font-semibold text-[color:var(--text)]">
-                      <span className="h-2.5 w-2.5 rounded-full bg-[color:var(--primary2)]/70" />
-                      {item.title}
-                    </div>
-                    <div className="mt-1 text-xs text-[color:var(--muted)]">{item.desc}</div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      <section className="rounded-[var(--radius)] border border-[color:var(--border)] bg-white/80 p-6 shadow-[var(--shadow-subtle)] sm:p-8">
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <div className="space-y-4">
-            <SectionTitle
-              title="Designed to feel calm and guided"
-              description="Clear steps, elegant surfaces, and clean hierarchy so the check feels trustworthy—not overwhelming."
-            />
-            <p className="text-sm text-[color:var(--muted)]">
-              You’ll see a single question at a time, with structured actions and progress cues so
-              you always know where you are.
-            </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {[
-              {
-                title: "Progress cues",
-                desc: "Step indicator and gentle progress bar for confidence.",
-              },
-              {
-                title: "Guided language",
-                desc: "Short prompts + helper text instead of dense forms.",
-              },
-              {
-                title: "Premium report",
-                desc: "A polished summary you can share or export.",
-              },
-              {
-                title: "Private by default",
-                desc: "Everything stays local unless you choose otherwise.",
-              },
-            ].map((item) => (
-              <Card key={item.title} className="bg-white/90">
-                <CardContent className="space-y-2">
-                  <div className="text-sm font-semibold text-[color:var(--text)]">{item.title}</div>
-                  <div className="text-xs text-[color:var(--muted)]">{item.desc}</div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <footer className="border-t border-[color:var(--border)] pt-6">
-        <div className="text-xs text-[color:var(--muted)]">
-          Authority is an informational readiness tool only. It does not replace legal advice.
-        </div>
+      <footer className="fixed bottom-6 left-1/2 w-full max-w-[640px] -translate-x-1/2 px-6 md:px-12">
+        <p className="text-[10px] text-[#999999]">
+          This is an informational tool. Not legal advice. If you&apos;re unsure, speak to a qualified
+          professional.
+        </p>
       </footer>
-    </PageShell>
+    </div>
   );
 }
