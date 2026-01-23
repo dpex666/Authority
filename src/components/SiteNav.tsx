@@ -17,7 +17,7 @@ export default function SiteNav() {
             View example summary
           </Link>
           <Link
-            href="/quiz"
+            href="/check/start"
             className={buttonStyles({ variant: "primary", size: "sm" })}
           >
             Start the check

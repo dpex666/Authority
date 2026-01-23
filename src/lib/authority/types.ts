@@ -28,6 +28,12 @@ export type Question = {
 
 export type AuthorityAnswers = Record<string, AnswerValue>;
 
+export type AuthorityCheckState = {
+  answers: AuthorityAnswers;
+  currentQuestionNumber: number;
+  updatedAt: number;
+};
+
 export type PillarResult = {
   pillar: AuthorityPillar;
   score: number; // 0-100

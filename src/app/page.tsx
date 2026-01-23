@@ -39,7 +39,7 @@ export default function HomePage() {
     };
     window.dispatchEvent(new CustomEvent("analytics", { detail }));
     console.log("[analytics]", detail);
-    router.push("/quiz");
+    router.push("/check/start");
   };
 
   return (
