@@ -14,20 +14,20 @@ export function buttonStyles({
   disabled?: boolean;
 }) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-[var(--radius)] font-medium transition focus:outline-none focus:ring-2 focus:ring-[color:var(--primary)]/20";
+    "inline-flex items-center justify-center gap-2 rounded-[var(--radius)] font-medium transition focus:outline-none focus:ring-2 focus:ring-[color:var(--ring)]";
 
   const sizes = {
-    sm: "px-3.5 py-2 text-xs",
-    md: "px-5 py-2.5 text-sm",
-    lg: "px-6 py-3 text-base",
+    sm: "h-9 px-3.5 text-xs",
+    md: "h-11 px-5 text-sm",
+    lg: "h-12 px-6 text-base",
   };
 
   const variants: Record<Variant, string> = {
     primary:
-      "bg-[color:var(--primary)] text-white shadow-[0_10px_24px_rgba(15,23,42,0.18)] hover:bg-[#111827] active:scale-[0.98]",
+      "bg-[color:var(--primary)] text-white shadow-[0_12px_28px_rgba(15,23,42,0.2)] hover:bg-[#111827] active:scale-[0.98]",
     secondary:
-      "border border-[color:var(--border)] bg-white text-[color:var(--ink)] shadow-sm hover:bg-[color:var(--bg-1)]",
-    ghost: "text-[color:var(--ink)] hover:bg-[color:var(--bg-1)]",
+      "border border-[color:var(--border)] bg-[color:var(--surface)] text-[color:var(--text)] shadow-sm hover:bg-[color:var(--surface2)]",
+    ghost: "text-[color:var(--text)] hover:bg-[color:var(--surface2)]",
   };
 
   const disabledStyle =

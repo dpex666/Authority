@@ -10,10 +10,10 @@ export function Badge({
   className?: string;
 }) {
   const styles: Record<typeof tone, string> = {
-    muted: "border-[color:var(--border)] bg-[color:var(--bg-1)] text-[color:var(--muted)]",
+    muted: "border-[color:var(--border)] bg-[color:var(--surface2)] text-[color:var(--muted)]",
     primary: "border-[color:var(--primary)]/20 bg-[color:var(--primary)]/10 text-[color:var(--primary)]",
     success: "border-[color:var(--success)]/25 bg-[color:var(--success)]/10 text-[color:var(--success)]",
-    warning: "border-[color:var(--warning)]/40 bg-[color:var(--warning)]/20 text-[color:var(--ink)]",
+    warning: "border-[color:var(--warning)]/40 bg-[color:var(--warning)]/20 text-[color:var(--text)]",
   };
 
   return (
