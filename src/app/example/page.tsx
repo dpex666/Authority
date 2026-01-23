@@ -1,10 +1,11 @@
 import Link from "next/link";
 import ReportView from "@/components/ReportView";
 import { generateReport } from "@/lib/authority/report";
+import type { AuthorityAnswers } from "@/lib/authority/types";
 
 export default function ExamplePage() {
   // Example answers (just enough to generate a meaningful report)
-  const exampleAnswers: any = {
+  const exampleAnswers: AuthorityAnswers = {
     // We don’t need real question IDs here yet.
     // The generator mostly uses pillar scores/flags derived from your existing scoring.
   };

@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  --font-sans: "Montserrat";
   --primary: #1d4641;
   --secondary: #d4e9ca;
   --tertiary: #48705b;

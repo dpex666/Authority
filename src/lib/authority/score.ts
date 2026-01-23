@@ -40,12 +40,6 @@ function valueToUnit(v: AnswerValue, questionId: string): number | null {
   return 0.25;
 }
 
-function scaleLabelToValue(unit: number): AnswerValue {
-  if (unit >= 0.85) return "low";
-  if (unit >= 0.35) return "medium";
-  return "high";
-}
-
 function buildFlags(pillar: AuthorityPillar, answers: AuthorityAnswers): string[] {
   const flags: string[] = [];
 
