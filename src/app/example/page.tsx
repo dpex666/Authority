@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import ReportView from "@/components/ReportView";
 import { generateReport } from "@/lib/authority/report";
 import type { AuthorityAnswers } from "@/lib/authority/types";
-import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { PageShell } from "@/components/ui/PageShell";
 import { SectionTitle } from "@/components/ui/SectionTitle";
@@ -32,8 +31,8 @@ export default function ExamplePage() {
         </>
       }
     >
-      <Container className="py-12 sm:py-14">
-        <div className="mb-10 space-y-4">
+      <div className="space-y-10">
+        <div className="space-y-4">
           <div className="inline-flex items-center rounded-full border border-[color:var(--border)] bg-white/90 px-3 py-1 text-xs font-medium text-[color:var(--muted)] shadow-sm">
             Example report layout
           </div>
@@ -59,7 +58,7 @@ export default function ExamplePage() {
 
         {/* Example page should look "unlocked" so people see value */}
         <ReportView report={report} unlocked={true} />
-      </Container>
+      </div>
     </PageShell>
   );
 }

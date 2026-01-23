@@ -13,7 +13,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Progress } from "./ui/Progress";
 import { Button } from "./ui/Button";
 import { ChoiceRow, ScaleRow } from "./ui/Field";
-import { Container } from "./ui/Container";
 import { Input } from "./ui/Input";
 import { Badge } from "./ui/Badge";
 import { Divider } from "./ui/Divider";
@@ -115,236 +114,239 @@ export default function AuthorityApp() {
 
   return (
     <PageShell
+      mainClassName="py-10 sm:py-12"
       actions={
         <Button variant="ghost" size="sm" onClick={reset}>
           Reset
         </Button>
       }
     >
-      <Container className="py-10 sm:py-12">
-        {/* Top bar */}
-        <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <div className="text-sm font-medium text-[color:var(--muted)]">Authority check</div>
-            <div className="mt-2 text-3xl font-semibold leading-tight text-[color:var(--text)] sm:text-4xl">
-              Your current authority readiness
-            </div>
-            <div className="mt-2 max-w-xl text-sm text-[color:var(--muted)] sm:text-base">
-              One question at a time. Calm, structured, and designed for clear next steps.
-            </div>
+      {/* Top bar */}
+      <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="text-sm font-medium text-[color:var(--muted)]">Authority check</div>
+          <div className="mt-2 text-3xl font-semibold leading-tight text-[color:var(--text)] sm:text-4xl">
+            Your current authority readiness
+          </div>
+          <div className="mt-2 max-w-xl text-sm text-[color:var(--muted)] sm:text-base">
+            One question at a time. Calm, structured, and designed for clear next steps.
           </div>
         </div>
+      </div>
 
-        {/* INTRO */}
-        {screen === "intro" && (
-          <Card className="bg-white/95 shadow-[var(--shadow-soft)]">
-            <CardHeader>
-              <CardTitle>Your starting point</CardTitle>
-              <CardDescription>Personalise the report and begin the guided check.</CardDescription>
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                <Badge tone="primary">Index: {result.overall}/100</Badge>
-                <Badge>Status: {overallLabel(result.overall)}</Badge>
-                <Badge>Report: {unlocked ? "Unlocked" : "Locked"}</Badge>
+      {/* INTRO */}
+      {screen === "intro" && (
+        <Card className="bg-white/95 shadow-[var(--shadow-soft)]">
+          <CardHeader>
+            <CardTitle>Your starting point</CardTitle>
+            <CardDescription>Personalise the report and begin the guided check.</CardDescription>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <Badge tone="primary">Index: {result.overall}/100</Badge>
+              <Badge>Status: {overallLabel(result.overall)}</Badge>
+              <Badge>Report: {unlocked ? "Unlocked" : "Locked"}</Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            <div className="space-y-2 text-sm text-[color:var(--ink-soft)] sm:text-base">
+              <div>
+                Authority maps where decisions, access, and digital control actually sit — and
+                where it breaks under stress.
               </div>
+              <div>
+                You’ll answer <b>{QUESTIONS.length}</b> questions. Takes about <b>3–5 minutes</b>.
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Input
+                label="Your name"
+                value={profile.youName}
+                onChange={(e) => setProfile((p) => ({ ...p, youName: e.target.value }))}
+                placeholder="e.g. Dan"
+              />
+              <Input
+                label="Partner name (optional)"
+                value={profile.partnerName || ""}
+                onChange={(e) => setProfile((p) => ({ ...p, partnerName: e.target.value }))}
+                placeholder="e.g. Kat"
+              />
+            </div>
+            <div className="text-xs text-[color:var(--muted)]">
+              Used only to personalise your report. Stored locally.
+            </div>
+          </CardContent>
+          <Divider />
+          <CardFooter>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button
+                className="w-full sm:w-auto"
+                onClick={() => setScreen("quiz")}
+                disabled={!profile.youName.trim()}
+              >
+                Start
+              </Button>
+              <Button
+                variant="ghost"
+                className="w-full sm:w-auto"
+                onClick={() => setScreen("summary")}
+              >
+                View summary
+              </Button>
+            </div>
+          </CardFooter>
+        </Card>
+      )}
+
+      {/* QUIZ */}
+      {screen === "quiz" && (
+        <div className="space-y-5">
+          {/* progress row */}
+          <Card className="bg-white/90">
+            <CardHeader className="space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="text-sm text-[color:var(--muted)]">
+                  Step {step + 1} of {QUESTIONS.length} • {PILLAR_LABEL[q.pillar]}
+                </div>
+                <Badge tone="primary">{progress}% complete</Badge>
+              </div>
+              <Progress value={progress} />
             </CardHeader>
-            <CardContent className="space-y-5">
-              <div className="space-y-2 text-sm text-[color:var(--ink-soft)] sm:text-base">
-                <div>
-                  Authority maps where decisions, access, and digital control actually sit — and
-                  where it breaks under stress.
-                </div>
-                <div>
-                  You’ll answer <b>{QUESTIONS.length}</b> questions. Takes about <b>3–5 minutes</b>.
-                </div>
-              </div>
+          </Card>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Input
-                  label="Your name"
-                  value={profile.youName}
-                  onChange={(e) => setProfile((p) => ({ ...p, youName: e.target.value }))}
-                  placeholder="e.g. Dan"
-                />
-                <Input
-                  label="Partner name (optional)"
-                  value={profile.partnerName || ""}
-                  onChange={(e) => setProfile((p) => ({ ...p, partnerName: e.target.value }))}
-                  placeholder="e.g. Kat"
-                />
-              </div>
-              <div className="text-xs text-[color:var(--muted)]">
-                Used only to personalise your report. Stored locally.
+          <Card className="bg-white/95 shadow-[var(--shadow-soft)]">
+            <CardHeader className="space-y-2">
+              <CardTitle>{q.title}</CardTitle>
+              {q.help ? <CardDescription>{q.help}</CardDescription> : null}
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-2">
+                {q.type === "single" && q.options
+                  ? q.options.map((o) => (
+                      <ChoiceRow
+                        key={o.value}
+                        value={o.value}
+                        current={answers[q.id]}
+                        label={o.label}
+                        onPick={pick}
+                      />
+                    ))
+                  : null}
+
+                {q.type === "scale" ? <ScaleRow current={answers[q.id]} onPick={pick} /> : null}
               </div>
             </CardContent>
             <Divider />
-            <CardFooter>
-              <div className="flex flex-col gap-3 sm:flex-row">
+            <CardFooter className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <Button
+                variant="ghost"
+                className="w-full sm:w-auto"
+                onClick={() => setStep((s) => Math.max(0, s - 1))}
+                disabled={step === 0}
+              >
+                Back
+              </Button>
+
+              {!isLast ? (
                 <Button
                   className="w-full sm:w-auto"
-                  onClick={() => setScreen("quiz")}
-                  disabled={!profile.youName.trim()}
+                  onClick={() => setStep((s) => Math.min(QUESTIONS.length - 1, s + 1))}
                 >
-                  Start
+                  Next
                 </Button>
-                <Button
-                  variant="ghost"
-                  className="w-full sm:w-auto"
-                  onClick={() => setScreen("summary")}
-                >
-                  View summary
+              ) : (
+                <Button className="w-full sm:w-auto" onClick={() => setScreen("summary")}>
+                  Finish
                 </Button>
-              </div>
+              )}
             </CardFooter>
           </Card>
-        )}
 
-        {/* QUIZ */}
-        {screen === "quiz" && (
-          <div className="space-y-5">
-            {/* progress row */}
-            <Card className="bg-white/90">
-              <CardHeader className="space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="text-sm text-[color:var(--muted)]">
-                    Step {step + 1} of {QUESTIONS.length} • {PILLAR_LABEL[q.pillar]}
-                  </div>
-                  <Badge tone="primary">{progress}% complete</Badge>
+          <div className="text-xs text-[color:var(--muted)]">
+            Pro tip: answer like it’s real life, not “best case”.
+          </div>
+        </div>
+      )}
+
+      {/* SUMMARY */}
+      {screen === "summary" && (
+        <div className="space-y-5">
+          <Card className="bg-white/95 shadow-[var(--shadow-soft)]">
+            <CardContent className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <div className="text-sm text-[color:var(--muted)]">Your Authority Index</div>
+                <div className="mt-1 text-4xl font-semibold leading-tight text-[color:var(--text)]">
+                  {result.overall}/100
                 </div>
-                <Progress value={progress} />
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-white/95 shadow-[var(--shadow-soft)]">
-              <CardHeader className="space-y-2">
-                <CardTitle>{q.title}</CardTitle>
-                {q.help ? <CardDescription>{q.help}</CardDescription> : null}
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-2">
-                  {q.type === "single" && q.options
-                    ? q.options.map((o) => (
-                        <ChoiceRow
-                          key={o.value}
-                          value={o.value}
-                          current={answers[q.id]}
-                          label={o.label}
-                          onPick={pick}
-                        />
-                      ))
-                    : null}
-
-                  {q.type === "scale" ? <ScaleRow current={answers[q.id]} onPick={pick} /> : null}
+                <div className="mt-1 text-sm text-[color:var(--muted)]">
+                  Status: {overallLabel(result.overall)}
                 </div>
-              </CardContent>
-              <Divider />
-              <CardFooter className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row">
                 <Button
                   variant="ghost"
                   className="w-full sm:w-auto"
-                  onClick={() => setStep((s) => Math.max(0, s - 1))}
-                  disabled={step === 0}
+                  onClick={() => setScreen("quiz")}
                 >
-                  Back
+                  Back to questions
                 </Button>
-
-                {!isLast ? (
-                  <Button
-                    className="w-full sm:w-auto"
-                    onClick={() => setStep((s) => Math.min(QUESTIONS.length - 1, s + 1))}
-                  >
-                    Next
-                  </Button>
-                ) : (
-                  <Button className="w-full sm:w-auto" onClick={() => setScreen("summary")}>
-                    Finish
-                  </Button>
-                )}
-              </CardFooter>
-            </Card>
-
-            <div className="text-xs text-[color:var(--muted)]">
-              Pro tip: answer like it’s real life, not “best case”.
-            </div>
-          </div>
-        )}
-
-        {/* SUMMARY */}
-        {screen === "summary" && (
-          <div className="space-y-5">
-            <Card className="bg-white/95 shadow-[var(--shadow-soft)]">
-              <CardContent className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <div className="text-sm text-[color:var(--muted)]">Your Authority Index</div>
-                  <div className="mt-1 text-4xl font-semibold leading-tight text-[color:var(--text)]">
-                    {result.overall}/100
-                  </div>
-                  <div className="mt-1 text-sm text-[color:var(--muted)]">
-                    Status: {overallLabel(result.overall)}
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <Button variant="ghost" className="w-full sm:w-auto" onClick={() => setScreen("quiz")}>
-                    Back to questions
-                  </Button>
-                  <Button className="w-full sm:w-auto" onClick={() => setScreen("intro")}>
-                    Home
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Paid-worthy report */}
-            <ReportView report={report} unlocked={unlocked} />
-
-            {/* Authority Map (kept outside ReportView so it remains a clear “bonus” value) */}
-            <Card className="bg-white/95 shadow-[var(--shadow-soft)]">
-              <CardHeader className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <div className="text-sm text-[color:var(--muted)]">Authority Map</div>
-                  <div className="mt-1 text-sm text-[color:var(--muted)]">
-                    Visualises overlaps, gaps, and single points of failure.
-                  </div>
-                </div>
-                <Badge>{unlocked ? "Unlocked" : "Locked"}</Badge>
-              </CardHeader>
-              <CardContent>
-                {unlocked ? (
-                  <AuthorityMap result={result} />
-                ) : (
-                  <div className="rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--surface2)] px-5 py-4 text-sm text-[color:var(--muted)]">
-                    Teaser:{" "}
-                    <span className="text-[color:var(--ink-soft)]">
-                      {topTeaser ?? "No critical flags detected."}
-                    </span>
-                    <div className="mt-2">Unlock to view the full map and deeper risk detail.</div>
-                  </div>
-                )}
-              </CardContent>
-              <Divider />
-              <CardFooter className="flex flex-col gap-3 sm:flex-row">
-                <Button className="w-full sm:w-auto" onClick={startCheckout}>
-                  {unlocked ? "Report unlocked" : "Unlock full report"}
+                <Button className="w-full sm:w-auto" onClick={() => setScreen("intro")}>
+                  Home
                 </Button>
+              </div>
+            </CardContent>
+          </Card>
 
-                {unlocked ? (
-                  <Button variant="ghost" className="w-full sm:w-auto" onClick={downloadPdf}>
-                    Download PDF
-                  </Button>
-                ) : null}
+          {/* Paid-worthy report */}
+          <ReportView report={report} unlocked={unlocked} />
 
-                <Button
-                  variant="ghost"
-                  className="w-full sm:w-auto"
-                  onClick={() => navigator.clipboard.writeText(window.location.href)}
-                >
-                  Copy link
+          {/* Authority Map (kept outside ReportView so it remains a clear “bonus” value) */}
+          <Card className="bg-white/95 shadow-[var(--shadow-soft)]">
+            <CardHeader className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <div className="text-sm text-[color:var(--muted)]">Authority Map</div>
+                <div className="mt-1 text-sm text-[color:var(--muted)]">
+                  Visualises overlaps, gaps, and single points of failure.
+                </div>
+              </div>
+              <Badge>{unlocked ? "Unlocked" : "Locked"}</Badge>
+            </CardHeader>
+            <CardContent>
+              {unlocked ? (
+                <AuthorityMap result={result} />
+              ) : (
+                <div className="rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--surface2)] px-5 py-4 text-sm text-[color:var(--muted)]">
+                  Teaser:{" "}
+                  <span className="text-[color:var(--ink-soft)]">
+                    {topTeaser ?? "No critical flags detected."}
+                  </span>
+                  <div className="mt-2">Unlock to view the full map and deeper risk detail.</div>
+                </div>
+              )}
+            </CardContent>
+            <Divider />
+            <CardFooter className="flex flex-col gap-3 sm:flex-row">
+              <Button className="w-full sm:w-auto" onClick={startCheckout}>
+                {unlocked ? "Report unlocked" : "Unlock full report"}
+              </Button>
+
+              {unlocked ? (
+                <Button variant="ghost" className="w-full sm:w-auto" onClick={downloadPdf}>
+                  Download PDF
                 </Button>
-              </CardFooter>
-            </Card>
-          </div>
-        )}
-      </Container>
+              ) : null}
+
+              <Button
+                variant="ghost"
+                className="w-full sm:w-auto"
+                onClick={() => navigator.clipboard.writeText(window.location.href)}
+              >
+                Copy link
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+      )}
     </PageShell>
   );
 }
