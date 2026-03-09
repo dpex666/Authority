@@ -1,17 +1,26 @@
 "use client";
 
 import * as React from "react";
-import { useRouter } from "next/navigation";
+import { Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/Input";
 import { loadProfile, saveProfile, type AuthorityProfile } from "@/lib/authority/profile";
 
-export default function CheckStartPage() {
+const PARTNER_REF_KEY = "authority_partner_ref";
+
+function CheckStartInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [profile, setProfile] = React.useState<AuthorityProfile>({ youName: "", partnerName: "" });
 
   React.useEffect(() => {
     setProfile(loadProfile());
-  }, []);
+    // Save partner comparison ref to sessionStorage if present
+    const ref = searchParams.get("ref");
+    if (ref) {
+      sessionStorage.setItem(PARTNER_REF_KEY, ref);
+    }
+  }, [searchParams]);
 
   React.useEffect(() => {
     saveProfile(profile);
@@ -71,5 +80,13 @@ export default function CheckStartPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckStartPage() {
+  return (
+    <Suspense>
+      <CheckStartInner />
+    </Suspense>
   );
 }
