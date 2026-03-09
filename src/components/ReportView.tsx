@@ -29,10 +29,18 @@ function ProgressBar({ value }: { value: number }) {
 export default function ReportView({
   report,
   unlocked,
+  onDownload,
+  checkedActions,
+  onToggleAction,
 }: {
   report: AuthorityReport;
   unlocked: boolean;
+  onDownload?: (id: string) => void;
+  checkedActions?: Set<string>;
+  onToggleAction?: (id: string) => void;
 }) {
+  const totalActions = report.actions.length;
+  const doneCount = checkedActions ? [...checkedActions].filter((id) => report.actions.some((a) => a.id === id)).length : 0;
   return (
     <Card id="report-root" className="bg-white/95 shadow-[var(--shadow-soft)]">
       <CardHeader className="space-y-6">
@@ -159,32 +167,92 @@ export default function ReportView({
             title="Next 7 days plan"
             description="Clear actions with owners, effort, and timing."
           />
-          <div className="mt-4 grid gap-3">
-            {report.actions.map((a) => (
-              <div
-                key={a.id}
-                className="rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--surface2)] px-5 py-4"
-              >
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="text-sm font-semibold text-[color:var(--text)]">{a.title}</div>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge>Owner: {a.owner}</Badge>
-                    <Badge>Effort: {a.effort}</Badge>
-                    <Badge>Impact: {a.impact}</Badge>
-                    <Badge>Due: {a.due}</Badge>
-                  </div>
-                </div>
-
-                {a.template ? (
-                  <div className="mt-3 rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-4 py-3">
-                    <div className="text-xs font-medium text-[color:var(--muted)]">
-                      Message template
-                    </div>
-                    <div className="mt-1 text-sm text-[color:var(--muted)]">{a.template}</div>
-                  </div>
-                ) : null}
+          {onToggleAction && totalActions > 0 && (
+            <div className="mt-3 mb-1">
+              <div className="flex items-center justify-between text-xs text-[color:var(--muted)]">
+                <span>{doneCount} of {totalActions} actions completed</span>
+                <span>{Math.round((doneCount / totalActions) * 100)}%</span>
               </div>
-            ))}
+              <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-[color:var(--surface2)]">
+                <div
+                  className="h-full rounded-full bg-[#00A86B] transition-all duration-500"
+                  style={{ width: `${(doneCount / totalActions) * 100}%` }}
+                />
+              </div>
+            </div>
+          )}
+          <div className="mt-4 grid gap-3">
+            {[...report.actions]
+              .sort((a, b) => {
+                const aDone = checkedActions?.has(a.id) ? 1 : 0;
+                const bDone = checkedActions?.has(b.id) ? 1 : 0;
+                return aDone - bDone;
+              })
+              .map((a) => {
+                const isDone = checkedActions?.has(a.id) ?? false;
+                return (
+                  <div
+                    key={a.id}
+                    className={[
+                      "rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--surface2)] px-5 py-4 transition-opacity",
+                      isDone ? "opacity-50" : "",
+                    ].join(" ")}
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-3">
+                        {onToggleAction && (
+                          <button
+                            type="button"
+                            onClick={() => onToggleAction(a.id)}
+                            className={[
+                              "flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-colors",
+                              isDone
+                                ? "border-[#00A86B] bg-[#00A86B] text-white"
+                                : "border-[color:var(--border)] hover:border-[#00A86B]",
+                            ].join(" ")}
+                            aria-label={isDone ? "Mark as incomplete" : "Mark as complete"}
+                          >
+                            {isDone && (
+                              <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                                <path
+                                  d="M1 4L3.5 6.5L9 1"
+                                  stroke="currentColor"
+                                  strokeWidth="1.8"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            )}
+                          </button>
+                        )}
+                        <div
+                          className={[
+                            "text-sm font-semibold text-[color:var(--text)]",
+                            isDone ? "line-through" : "",
+                          ].join(" ")}
+                        >
+                          {a.title}
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Badge>Owner: {a.owner}</Badge>
+                        <Badge>Effort: {a.effort}</Badge>
+                        <Badge>Impact: {a.impact}</Badge>
+                        <Badge>Due: {a.due}</Badge>
+                      </div>
+                    </div>
+
+                    {a.template ? (
+                      <div className="mt-3 rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-4 py-3">
+                        <div className="text-xs font-medium text-[color:var(--muted)]">
+                          Message template
+                        </div>
+                        <div className="mt-1 text-sm text-[color:var(--muted)]">{a.template}</div>
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
           </div>
         </div>
       </CardContent>
@@ -213,6 +281,15 @@ export default function ReportView({
                     <Badge>Shareable</Badge>
                   </div>
 
+                  {!isLocked && onDownload && (
+                    <button
+                      type="button"
+                      onClick={() => onDownload(x.id)}
+                      className="mt-3 inline-flex items-center gap-1.5 rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-3 py-1.5 text-xs font-medium text-[color:var(--text)] hover:border-[color:var(--primary)] hover:text-[color:var(--primary)] transition-colors"
+                    >
+                      Download ↓
+                    </button>
+                  )}
                   {isLocked ? (
                     <div className="absolute inset-0 flex items-center justify-center bg-white/80 backdrop-blur-[2px]">
                       <div className="rounded-[var(--radius)] border border-[color:var(--border)] bg-white px-4 py-3 text-sm text-[color:var(--muted)]">
